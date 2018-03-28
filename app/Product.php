@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     public $timestamps = false;
-    protected $fillable = ['Name', 'Variant', 'PackSize', 'Key', 'CategoryID', 'UnitID'];
+    protected $fillable = ['name', 'pack_size', 'category_id', 'unit_id'];
     
     /**
      * Get the product category.
@@ -16,5 +16,9 @@ class Product extends Model
     {
         return $this->belongsTo('App\ProductCategory');
     }
-    
+	
+	public function purchases()
+    {
+        return $this->hasMany('App\Purchase');
+    }
 }

@@ -14,15 +14,15 @@ class CreatePaymentsTable extends Migration
     public function up()
     {
         Schema::create('payments', function (Blueprint $table) {
-            $table->increments('ID');
-			$table->decimal('UnitPrice', 13,2)->default('0');
-			$table->timestamp('Date')->default(now());
-			$table->integer('Store')->nullable();
-			$table->integer('PaymentType')->default('1');
-			$table->integer('Bank')->nullable();
-			$table->integer('Instalment')->nullable();
-			$table->string('TrxCode')->default('')->unique();
-        });
+            $table->increments('id');
+			$table->decimal('amount', 13,2)->default('0');
+			$table->integer('store_id')->nullable();
+			$table->timestamp('date')->default(now());
+			$table->integer('type_id')->default('1');
+			$table->integer('bank_id')->nullable();
+			$table->integer('instalment')->nullable();
+			$table->string('trx_code')->default('')->unique();
+		});
     }
 
     /**

@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Bank extends Model
 {
     public $timestamps = false;
-	protected $fillable = ['Name', 'Key'];
+	protected $fillable = ['name', 'key'];
 }

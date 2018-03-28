@@ -14,10 +14,10 @@ class CreateBanksTable extends Migration
     public function up()
     {
         Schema::create('banks', function (Blueprint $table) {
-            $table->increments('ID');
-			$table->string('Name')->default('');
+            $table->increments('id');
+			$table->string('name')->default('');
 			// https://laravel.com/docs/5.6/migrations#indexes
-			$table->string('Key')->default('')->unique();
+			$table->string('key')->default('')->unique();
         });
     }
 

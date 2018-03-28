@@ -14,9 +14,9 @@ class CreateWishlistsTable extends Migration
     public function up()
     {
         Schema::create('wishlists', function (Blueprint $table) {
-            $table->increments('ID');
-			$table->integer('ProductType')->default('0');
-			$table->integer('Qty')->default('0');
+            $table->increments('id');
+			$table->integer('product_type')->default('0');
+			$table->integer('qty')->default('0');
         });
     }
 

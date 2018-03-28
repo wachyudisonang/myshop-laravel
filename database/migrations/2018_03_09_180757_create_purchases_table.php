@@ -14,11 +14,16 @@ class CreatePurchasesTable extends Migration
     public function up()
     {
         Schema::create('purchases', function (Blueprint $table) {
-            $table->increments('ID');
-            $table->integer('Product')->default('0');
-            $table->decimal('UnitPrice', 13,2)->default('0');
-            $table->integer('Qty')->default('1');
-            $table->integer('Payment')->default('0');
+            $table->increments('id');
+			$table->integer('product_id')->unsigned();
+            $table->decimal('unit_price', 13,2)->default('0');
+            $table->integer('qty')->default('1');
+            $table->integer('payment_id')->unsigned()->nullable();
+		});
+		
+		Schema::table('purchases', function (Blueprint $table) {
+            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('payment_id')->references('id')->on('payments');
         });
     }
 

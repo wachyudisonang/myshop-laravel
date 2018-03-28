@@ -7,5 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     public $timestamps = false;
-	protected $fillable = ['Amount', 'Store', 'Date', 'PaymentType', 'Bank', 'Instalment', 'TrxCode'];
+	protected $fillable = ['amount', 'store_id', 'date', 'type_id', 'bank_id', 'instalment', 'trx_code'];
+
+	/**
+     * Get the product.
+     */
+    public function purchase()
+    {
+        return $this->hasOne('App\Purchase');
+    }
 }
