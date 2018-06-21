@@ -39,6 +39,45 @@ class ProductsController extends Controller
         return response()->json($purchases, 200);
 	}
 
+	public function lastPurchased()
+	{
+		// https://laravel.com/docs/5.6/queries#joins
+        $purchases = DB::table('purchases')
+        ->leftJoin('products', 'product_id', '=', 'products.id')
+        ->leftJoin('product_categories', 'category_id', '=', 'product_categories.id')
+        ->leftJoin('units', 'unit_id', '=', 'units.id')
+        ->leftJoin('payments', 'payment_id', '=', 'payments.id')
+        ->leftJoin('stores', 'store_id', '=', 'stores.id')
+        ->leftJoin('payment_types', 'type_id', '=', 'payment_types.id')
+        ->leftJoin('banks', 'bank_id', '=', 'banks.id')
+        ->select('purchases.id', 'product_categories.name as category', 'products.name as name', 'products.pack_size', 'units.key as unit', 
+			'unit_price', 'qty', 'stores.key as store', 'date', 'payment_id', 'payment_types.key as payment_type', 'banks.key as bank', 'instalment')
+		->orderBy('date', 'desc')
+		->paginate(10);
+
+        return response()->json($purchases, 200);
+	}
+
+	public function purchasesHistory(Request $request, $key)
+	{
+		// https://laravel.com/docs/5.6/queries#joins
+        $purchases = DB::table('purchases')
+        ->leftJoin('products', 'product_id', '=', 'products.id')
+        ->leftJoin('product_categories', 'category_id', '=', 'product_categories.id')
+        ->leftJoin('units', 'unit_id', '=', 'units.id')
+        ->leftJoin('payments', 'payment_id', '=', 'payments.id')
+        ->leftJoin('stores', 'store_id', '=', 'stores.id')
+        ->leftJoin('payment_types', 'type_id', '=', 'payment_types.id')
+        ->leftJoin('banks', 'bank_id', '=', 'banks.id')
+        ->select('purchases.id', 'product_categories.name as category', 'products.name as name', 'products.pack_size', 'units.key as unit', 
+			'unit_price', 'qty', 'stores.key as store', 'date', 'payment_id', 'payment_types.key as payment_type', 'banks.key as bank', 'instalment')
+		->where('products.name', 'like', '%'.$key.'%')
+		->orderBy('date', 'desc')
+		->get();
+
+        return response()->json($purchases, 200);
+	}
+
 	public function filter(Request $request, $entity, $id)
 	{
 		$route = $request->route();
