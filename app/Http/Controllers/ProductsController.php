@@ -78,6 +78,16 @@ class ProductsController extends Controller
         return response()->json($purchases, 200);
 	}
 
+	public function listProduct(Request $request, $key)
+	{
+		// https://laravel.com/docs/5.6/queries#joins
+        $products = DB::table('products')
+        ->where('name', 'like', '%'.$key.'%')
+		->get();
+
+        return response()->json($products, 200);
+	}
+
 	public function filter(Request $request, $entity, $id)
 	{
 		$route = $request->route();
