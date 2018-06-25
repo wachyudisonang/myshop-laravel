@@ -71,7 +71,7 @@ class ProductsController extends Controller
         ->leftJoin('banks', 'bank_id', '=', 'banks.id')
         ->select('purchases.id', 'product_categories.name as category', 'products.name as name', 'products.pack_size', 'units.key as unit', 
 			'unit_price', 'qty', 'stores.key as store', 'date', 'payment_id', 'payment_types.key as payment_type', 'banks.key as bank', 'instalment')
-		->where('products.name', 'like', '%'.$key.'%')
+		->where('products.id', '=', $key)
 		->orderBy('date', 'desc')
 		->get();
 
