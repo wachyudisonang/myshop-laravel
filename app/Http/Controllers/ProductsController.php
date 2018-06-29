@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Product;
+use App\Purchase;
 use App\ProductCategory;
 use App\Unit;
 use App\Store;
@@ -138,15 +139,7 @@ class ProductsController extends Controller
 
 	public function listUnits()
 	{
-		$purchases = DB::table('product_categories')
-				->whereNotNull('name');
-				
-		$units = DB::table('units')
-				->whereNotNull('key')
-				->union($purchases)
-				->get();
-
-        return response()->json($purchases, 200);
+		return Unit::all();
 	}
 
 	public function show(Product $product)
@@ -166,6 +159,13 @@ class ProductsController extends Controller
 		// ]);
 	    $product = Product::create($request->json()->all());
 	    // $category = Category::create($request->input['CategoryID']);
+
+	    return response()->json($product, 201);
+	}
+
+	public function storepurchase(Request $request)
+    {
+	    $product = Purchase::create($request->json()->all());
 
 	    return response()->json($product, 201);
 	}
