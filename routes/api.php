@@ -30,7 +30,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('products', 'ProductsController@index')->middleware('cors');
 // Route::get('purchases', 'ProductsController@showAll')->middleware('cors');
 // Route::get('purchases/{entity}/{id}', 'ProductsController@filter')->middleware('cors');
-Route::get('product_categories', 'ProductsController@indexCategory')->middleware('cors');
 
 Route::get('products/{product}', 'ProductsController@show');
 
@@ -44,3 +43,5 @@ Route::delete('products/{product}', 'ProductsController@delete');
 Route::get('purchases', 'ProductsController@lastPurchased')->middleware('cors');
 Route::get('purchasehistory/{key}', 'ProductsController@purchasesHistory')->middleware('cors');
 Route::get('searchproducts/{key}', 'ProductsController@listProduct')->middleware('cors');
+Route::get('categories', 'ProductsController@listCategories')->middleware('cors');
+Route::get('unitsize', 'ProductsController@listUnits')->middleware('cors');

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use App\Product;
 use App\ProductCategory;
+use App\Unit;
 use App\Store;
 use App\Payment;
 use Illuminate\Support\Facades\Schema;
@@ -130,9 +131,22 @@ class ProductsController extends Controller
         return response()->json($purchases, 200);
 	}
 
-    public function indexCategory()
+    public function listCategories()
 	{
 	    return ProductCategory::all();
+	}
+
+	public function listUnits()
+	{
+		$purchases = DB::table('product_categories')
+				->whereNotNull('name');
+				
+		$units = DB::table('units')
+				->whereNotNull('key')
+				->union($purchases)
+				->get();
+
+        return response()->json($purchases, 200);
 	}
 
 	public function show(Product $product)
