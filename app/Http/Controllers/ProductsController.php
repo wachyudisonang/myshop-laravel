@@ -54,8 +54,9 @@ class ProductsController extends Controller
         ->leftJoin('banks', 'bank_id', '=', 'banks.id')
         ->select('purchases.id', 'product_categories.name as category', 'products.name as name', 'products.pack_size', 'units.key as unit', 
 			'unit_price', 'qty', 'stores.key as store', 'date', 'payment_id', 'payment_types.key as payment_type', 'banks.key as bank', 'instalment')
+		->whereNotNull('payment_id')
 		->orderBy('date', 'desc')
-		->paginate(10);
+		->paginate(2);
 
         return response()->json($purchases, 200);
 	}
@@ -74,6 +75,7 @@ class ProductsController extends Controller
         ->select('purchases.id', 'product_categories.name as category', 'products.name as name', 'products.pack_size', 'units.key as unit', 
 			'unit_price', 'qty', 'stores.key as store', 'date', 'payment_id', 'payment_types.key as payment_type', 'banks.key as bank', 'instalment')
 		->where('products.id', '=', $key)
+		->whereNotNull('payment_id')
 		->orderBy('date', 'desc')
 		->get();
 
