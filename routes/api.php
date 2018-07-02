@@ -40,6 +40,7 @@ Route::delete('products/{product}', 'ProductsController@delete');
 // Fix API path
 Route::get('products', 'ProductsController@index')->middleware('cors');
 Route::get('purchases', 'ProductsController@lastPurchased')->middleware('cors');
+Route::get('carts', 'ProductsController@carts')->middleware('cors');
 Route::get('purchasehistory/{key}', 'ProductsController@purchasesHistory')->middleware('cors');
 Route::get('searchproducts/{key}', 'ProductsController@listProduct')->middleware('cors');
 Route::get('categories', 'ProductsController@listCategories')->middleware('cors');
