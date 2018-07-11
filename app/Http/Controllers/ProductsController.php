@@ -169,6 +169,39 @@ class ProductsController extends Controller
 	    return $product;
 	}
 
+	public function init(Request $request)
+    {
+		$input = $request->json()->all();
+		// dd($input['name']);
+		// $this->validate($request, [
+		// 	'Name' => 'required|max:255',
+		// 	'Variant' => 'required|max:255',
+		// 	'PackSize' => 'required|integer',
+		// 	'Key' => 'required',
+		// 	'CategoryID' => 'required|integer',
+		// 	'UnitID' => 'required|integer',
+		// ]);
+		
+		$sad = ProductCategory::create(['name' => $input['category_id']]);
+		$lalala = DB::table('product_categories')
+        ->where('name', '=', $input['category_id'])
+		->first();
+		
+		$hg = Unit::create(['key' => $input['unit_id']]);
+		$lll = DB::table('units')
+        ->where('key', '=', $input['unit_id'])
+		->first();
+
+	    $product = Product::create([
+			'name' => $input['name'],
+			'pack_size' => $input['pack_size'],
+			'category_id' => $lalala->id,
+			'unit_id' => $lll->id
+		]);
+
+	    return response()->json($product, 201);
+	}
+	
 	public function store(Request $request)
     {
 		// $this->validate($request, [
