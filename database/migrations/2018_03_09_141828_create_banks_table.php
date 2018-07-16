@@ -15,9 +15,8 @@ class CreateBanksTable extends Migration
     {
         Schema::create('banks', function (Blueprint $table) {
             $table->increments('id');
-			$table->string('name')->default('');
 			// https://laravel.com/docs/5.6/migrations#indexes
-			$table->string('key')->default('')->unique();
+			$table->string('name')->default('')->unique();
         });
     }
 

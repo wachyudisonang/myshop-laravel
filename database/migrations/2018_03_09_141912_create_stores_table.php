@@ -15,8 +15,7 @@ class CreateStoresTable extends Migration
     {
         Schema::create('stores', function (Blueprint $table) {
             $table->increments('id');
-			$table->string('name')->default('');
-			$table->string('key')->default('')->unique();
+			$table->string('name')->default('')->unique();
         });
     }
 

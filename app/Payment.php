@@ -14,6 +14,23 @@ class Payment extends Model
      */
     public function purchase()
     {
-        return $this->hasOne('App\Purchase');
+        return $this->hasMany('App\Purchase');
     }
+
+    public function store()
+    {
+        return $this->belongsTo('App\Store');
+    }
+    
+    public function type()
+    {
+        return $this->belongsTo('App\PaymentType');
+    }
+
+    public function bank()
+    {
+        return $this->belongsTo('App\Bank');
+    }
+
+    
 }

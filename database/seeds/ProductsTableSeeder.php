@@ -6,6 +6,8 @@ use App\Product;
 use App\TestProduct;
 use App\ProductCategory;
 use App\Purchases;
+use App\Unit;
+use App\PaymentType;
 
 class ProductsTableSeeder extends Seeder
 {
@@ -36,13 +38,24 @@ class ProductsTableSeeder extends Seeder
             //     'category_id' => $faker->randomDigitNotNull(1),
             //     'unit_id' => $faker->randomNumber(2),
 			// ]);
-			
-            Purchases::create([
-				'product_id' => $faker->randomDigitNotNull(1),
-                'unit_price' => $faker->randomNumber(6),
-                'qty' => $faker->randomNumber(1),
-                'qty' => $faker->randomNumber(1),
-            ]);
+            
+            // check if table users is empty
+            if (Unit::get()->count() == 0) {
+                Unit::insert([
+                    ['name' => 'GR'],
+                    ['name' => 'PCS'],
+                    ['name' => 'ML'],
+                    ['name' => 'LT']
+                ]);
+            }
+
+            if (PaymentType::get()->count() == 0) {
+                PaymentType::insert([
+                    ['name' => 'CASH'],
+                    ['name' => 'DEBIT'],
+                    ['name' => 'CREDIT']
+                ]);
+            }
             
         }
     }

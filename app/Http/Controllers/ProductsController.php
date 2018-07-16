@@ -7,9 +7,11 @@ use DB;
 use App\Product;
 use App\Purchase;
 use App\ProductCategory;
+use App\Bank;
 use App\Unit;
 use App\Store;
 use App\Payment;
+use App\PaymentType;
 use Illuminate\Support\Facades\Schema;
 
 class ProductsController extends Controller
@@ -31,8 +33,8 @@ class ProductsController extends Controller
         ->leftJoin('stores', 'store_id', '=', 'stores.id')
         ->leftJoin('payment_types', 'type_id', '=', 'payment_types.id')
         ->leftJoin('banks', 'bank_id', '=', 'banks.id')
-        ->select('purchases.id', 'product_categories.name as category', 'products.name as name', 'products.pack_size', 'units.key as unit', 
-			'unit_price', 'qty', 'stores.key as store', 'date', 'payment_id', 'payment_types.key as payment_type', 'banks.key as bank', 'instalment')
+        ->select('purchases.id', 'product_categories.name as category', 'products.name as name', 'products.pack_size', 'units.name as unit', 
+			'unit_price', 'qty', 'stores.name as store', 'date', 'payment_id', 'payment_types.name as payment_type', 'banks.name as bank', 'instalment')
 		// ->whereNotNull('payment_id')
 		->orderBy('date', 'desc')
 		->get();
@@ -52,8 +54,8 @@ class ProductsController extends Controller
         ->leftJoin('stores', 'store_id', '=', 'stores.id')
         ->leftJoin('payment_types', 'type_id', '=', 'payment_types.id')
         ->leftJoin('banks', 'bank_id', '=', 'banks.id')
-        ->select('purchases.id', 'product_categories.name as category', 'products.name as name', 'products.pack_size', 'units.key as unit', 
-			'unit_price', 'qty', 'stores.key as store', 'date', 'payment_id', 'payment_types.key as payment_type', 'banks.key as bank', 'instalment')
+        ->select('purchases.id', 'product_categories.name as category', 'products.name as name', 'products.pack_size', 'units.name as unit', 
+			'unit_price', 'qty', 'stores.name as store', 'date', 'payment_id', 'payment_types.name as payment_type', 'banks.name as bank', 'instalment')
 		->whereNotNull('payment_id')
 		->orderBy('date', 'desc')
 		->paginate(2);
@@ -69,13 +71,10 @@ class ProductsController extends Controller
         ->leftJoin('product_categories', 'category_id', '=', 'product_categories.id')
         ->leftJoin('units', 'unit_id', '=', 'units.id')
         ->leftJoin('payments', 'payment_id', '=', 'payments.id')
-        ->leftJoin('stores', 'store_id', '=', 'stores.id')
-        ->leftJoin('payment_types', 'type_id', '=', 'payment_types.id')
-        ->leftJoin('banks', 'bank_id', '=', 'banks.id')
-        ->select('purchases.id', 'product_categories.name as category', 'products.name as name', 'products.pack_size', 'units.key as unit', 
-			'unit_price', 'qty', 'stores.key as store', 'date', 'payment_id', 'payment_types.key as payment_type', 'banks.key as bank', 'instalment')
+        ->select('purchases.id', 'product_categories.name as category', 'products.name as name', 'products.pack_size', 'units.name as unit', 
+			'unit_price', 'qty', 'payment_id')
 		->whereNull('payment_id')
-		->orderBy('date', 'desc')
+		->orderBy('name', 'desc')
 		->get();
 
         return response()->json($purchases, 200);
@@ -92,8 +91,8 @@ class ProductsController extends Controller
         ->leftJoin('stores', 'store_id', '=', 'stores.id')
         ->leftJoin('payment_types', 'type_id', '=', 'payment_types.id')
         ->leftJoin('banks', 'bank_id', '=', 'banks.id')
-        ->select('purchases.id', 'product_categories.name as category', 'products.name as name', 'products.pack_size', 'units.key as unit', 
-			'unit_price', 'qty', 'stores.key as store', 'date', 'payment_id', 'payment_types.key as payment_type', 'banks.key as bank', 'instalment')
+        ->select('purchases.id', 'product_categories.name as category', 'products.name as name', 'products.pack_size', 'units.name as unit', 
+			'unit_price', 'qty', 'stores.name as store', 'date', 'payment_id', 'payment_types.name as payment_type', 'banks.name as bank', 'instalment')
 		->where('products.id', '=', $key)
 		->whereNotNull('payment_id')
 		->orderBy('date', 'desc')
@@ -164,6 +163,31 @@ class ProductsController extends Controller
 		return Unit::all();
 	}
 
+	public function paymentOptions()
+	{
+		$bank = Bank::all();
+		$ptype = PaymentType::all();
+		$store = Store::all();
+
+		$allData = array_merge(
+					['banks', $bank->toArray()], 
+					['payment_types', $ptype->toArray()],
+					['stores', $store->toArray()]
+				);
+
+		return response()->json($allData, 200);
+	}
+
+	public function productOptions()
+	{
+		$unit = Unit::all();
+		$cat = ProductCategory::all();
+
+		$allData = array_merge(['units' => $unit->toArray()], ['product_categories' => $cat->toArray()]);
+
+		return response()->json($allData, 200);
+	}
+
 	public function show(Product $product)
 	{
 	    return $product;
@@ -186,17 +210,12 @@ class ProductsController extends Controller
 		$lalala = DB::table('product_categories')
         ->where('name', '=', $input['category_id'])
 		->first();
-		
-		$hg = Unit::create(['key' => $input['unit_id']]);
-		$lll = DB::table('units')
-        ->where('key', '=', $input['unit_id'])
-		->first();
 
 	    $product = Product::create([
 			'name' => $input['name'],
 			'pack_size' => $input['pack_size'],
 			'category_id' => $lalala->id,
-			'unit_id' => $lll->id
+			'unit_id' => $input['unit_id'],
 		]);
 
 	    return response()->json($product, 201);
@@ -208,7 +227,7 @@ class ProductsController extends Controller
 		// 	'Name' => 'required|max:255',
 		// 	'Variant' => 'required|max:255',
 		// 	'PackSize' => 'required|integer',
-		// 	'Key' => 'required',
+		// 	'name' => 'required',
 		// 	'CategoryID' => 'required|integer',
 		// 	'UnitID' => 'required|integer',
 		// ]);
@@ -223,6 +242,40 @@ class ProductsController extends Controller
 	    $product = Purchase::create($request->json()->all());
 
 	    return response()->json($product, 201);
+	}
+
+	public function storepayment(Request $request)
+    {
+		$input = $request->json()->all();
+		
+		$sad = Store::create(['name' => $input['store_id']]);
+		$lalala = DB::table('stores')
+        ->where('name', '=', $input['store_id'])
+		->first();
+		
+		$hg = PaymentType::create(['name' => $input['type_id']]);
+		$lll = DB::table('payment_types')
+        ->where('name', '=', $input['type_id'])
+		->first();
+		
+		$hgfds = Bank::create(['name' => $input['bank_id']]);
+		$yfgx = DB::table('banks')
+        ->where('name', '=', $input['bank_id'])
+		->first();
+		
+	    $payment = Payment::create([
+			'amount' => $input['amount'],
+			'store_id' => $lalala->id,
+			'type_id' => $lll->id,
+			'bank_id' => $yfgx->id,
+			'instalment' => $input['instalment'],
+			'trx_code' => $input['trx_code']
+			]);
+			
+		$array = [1,2];
+		Purchase::whereIn('id', $array)->update(['payment_id' => $payment->id]);
+
+	    return response()->json($payment, 201);
 	}
 
 	public function update(Request $request, Product $product)
