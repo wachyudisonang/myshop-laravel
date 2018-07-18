@@ -170,9 +170,9 @@ class ProductsController extends Controller
 		$store = Store::all();
 
 		$allData = array_merge(
-					['banks', $bank->toArray()], 
-					['payment_types', $ptype->toArray()],
-					['stores', $store->toArray()]
+					['banks' => $bank->toArray()], 
+					['payment_types' => $ptype->toArray()],
+					['stores' => $store->toArray()]
 				);
 
 		return response()->json($allData, 200);
@@ -272,7 +272,7 @@ class ProductsController extends Controller
 			'trx_code' => $input['trx_code']
 			]);
 			
-		$array = [1,2];
+		$array = $input['items'];
 		Purchase::whereIn('id', $array)->update(['payment_id' => $payment->id]);
 
 	    return response()->json($payment, 201);
