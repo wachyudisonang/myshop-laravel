@@ -21,12 +21,13 @@ class CreateProductsTable extends Migration
             $table->integer('pack_size')->nullable();
 			// $table->string('key')->default('')->unique();
             $table->integer('category_id')->unsigned()->nullable();
-			$table->integer('unit_id')->default('0');
+			$table->integer('unit_id')->unsigned()->nullable();
         });
 
         // https://laracasts.com/discuss/channels/eloquent/errno-150-foreign-key-constraint-is-incorrectly-formed/replies/338031
         Schema::table('products', function (Blueprint $table) {
             $table->foreign('category_id')->references('id')->on('product_categories');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 

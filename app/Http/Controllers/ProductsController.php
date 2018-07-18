@@ -231,8 +231,34 @@ class ProductsController extends Controller
 		// 	'CategoryID' => 'required|integer',
 		// 	'UnitID' => 'required|integer',
 		// ]);
-	    $product = Product::create($request->json()->all());
-	    // $category = Category::create($request->input['CategoryID']);
+	    // $product = Product::create($request->json()->all());
+		
+		$input = $request->json()->all();
+		
+		$catID = empty($input['category_id']) ? NULL : $input['category_id'];
+		if (!empty($input['category_id']) && !is_numeric($input['category_id'])) {
+			ProductCategory::create(['name' => $input['category_id']]);
+			$lalala = DB::table('product_categories')
+			->where('name', '=', $input['category_id'])
+			->first();
+			$catID = $lalala->id;
+		}
+		
+		$unitID = empty($input['unit_id']) ? NULL : $input['unit_id'];
+		// if (!empty($input['unit_id']) && !is_numeric($input['unit_id'])) {
+		// 	Unit::create(['name' => $input['unit_id']]);
+		// 	$lalalay = DB::table('units')
+		// 	->where('name', '=', $input['unit_id'])
+		// 	->first();
+		// 	$unitID = $lalalay->id;
+		// }
+
+	    $product = Product::create([
+			'name' => $input['name'],
+			'pack_size' => $input['pack_size'],
+			'category_id' => $catID,
+			'unit_id' => $unitID,
+		]);
 
 	    return response()->json($product, 201);
 	}
@@ -248,26 +274,38 @@ class ProductsController extends Controller
     {
 		$input = $request->json()->all();
 		
-		$sad = Store::create(['name' => $input['store_id']]);
-		$lalala = DB::table('stores')
-        ->where('name', '=', $input['store_id'])
-		->first();
+		$storeID = empty($input['store_id']) ? NULL : $input['store_id'];
+		if (!empty($input['store_id']) && !is_numeric($input['store_id'])) {
+			$sad = Store::create(['name' => $input['store_id']]);
+			$lalala = DB::table('stores')
+			->where('name', '=', $input['store_id'])
+			->first();
+			$storeID = $lalala->id;
+		}
 		
-		$hg = PaymentType::create(['name' => $input['type_id']]);
-		$lll = DB::table('payment_types')
-        ->where('name', '=', $input['type_id'])
-		->first();
+		$typeID = empty($input['type_id']) ? NULL : $input['type_id'];
+		if (!empty($input['type_id']) && !is_numeric($input['type_id'])) {
+			$hg = PaymentType::create(['name' => $input['type_id']]);
+			$lll = DB::table('payment_types')
+			->where('name', '=', $input['type_id'])
+			->first();
+			$typeID = $lll->id;
+		}
 		
-		$hgfds = Bank::create(['name' => $input['bank_id']]);
-		$yfgx = DB::table('banks')
-        ->where('name', '=', $input['bank_id'])
-		->first();
+		$bankID = empty($input['bank_id']) ? NULL : $input['bank_id'];
+		if (!empty($input['bank_id']) && !is_numeric($input['bank_id'])) {
+			$hgfds = Bank::create(['name' => $input['bank_id']]);
+			$yfgx = DB::table('banks')
+			->where('name', '=', $input['bank_id'])
+			->first();
+			$bankID = $yfgx->id;
+		}
 		
 	    $payment = Payment::create([
 			'amount' => $input['amount'],
-			'store_id' => $lalala->id,
-			'type_id' => $lll->id,
-			'bank_id' => $yfgx->id,
+			'store_id' => $storeID,
+			'type_id' => $typeID,
+			'bank_id' => $bankID,
 			'instalment' => $input['instalment'],
 			'trx_code' => $input['trx_code']
 			]);
