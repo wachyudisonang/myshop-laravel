@@ -307,7 +307,7 @@ class ProductsController extends Controller
 			'type_id' => $typeID,
 			'bank_id' => $bankID,
 			'instalment' => $input['instalment'],
-			'trx_code' => $input['trx_code']
+			'trx_code' => uniqid()
 			]);
 			
 		$array = $input['items'];
