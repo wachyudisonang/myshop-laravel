@@ -19,7 +19,14 @@ class ProductsController extends Controller
 
     public function index()
 	{
-	    return Product::all();
+		$products = DB::table('products')
+		->leftJoin('units', 'unit_id', '=', 'units.id')
+		->select('products.id', 'products.name as name', 'pack_size', 'category_id', 'unit_id', 'units.name as unit_name')
+		->get();
+
+		return response()->json($products, 200);
+
+	    // return Product::all();
 	}
 	
 	public function showAll()
