@@ -42,18 +42,18 @@ class ProductsTableSeeder extends Seeder
             // check if table users is empty
             if (Unit::get()->count() == 0) {
                 Unit::insert([
-                    ['name' => 'GR'],
-                    ['name' => 'PCS'],
-                    ['name' => 'ML'],
-                    ['name' => 'LT']
+                    ['name' => 'Gr'],
+                    ['name' => 'Pcs'],
+                    ['name' => 'Ml'],
+                    ['name' => 'Lt']
                 ]);
             }
 
             if (PaymentType::get()->count() == 0) {
                 PaymentType::insert([
-                    ['name' => 'CASH'],
-                    ['name' => 'DEBIT'],
-                    ['name' => 'CREDIT']
+                    ['name' => 'Cash'],
+                    ['name' => 'Debit'],
+                    ['name' => 'Credit']
                 ]);
             }
             
